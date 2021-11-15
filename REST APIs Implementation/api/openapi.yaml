@@ -24,6 +24,13 @@ tags:
     description: >-
       resource representing the users to which the task with ID taskID is
       assigned
+  - name: 'tasks/{taskId}/images'
+    description: >-
+      resource representing the image to attach to the task with ID taskID is
+      assigned  
+  - name: 'tasks/{taskId}/images/{imageId}'
+    description: >-
+      resource representing the image
   - name: 'tasks/{taskId}/assignees/{userId}'
     description: >-
       resource representing one user to which the task with ID taskID is
@@ -443,6 +450,143 @@ paths:
         '500':
           description: Internal Server Error
           content: {}
+  '/api/tasks/{taskId}/images':
+    post:
+      tags:
+        - 'tasks/{taskId}/images'
+      security:
+        - cookieAuth: []
+      summary: Assign an image to a task
+      description: >-
+        The image uploaded is assigned to the task with the taskId.
+        This operation can only be performed by the owner.
+      operationId: assignImagetoTask
+      parameters:
+        - name: taskId
+          in: path
+          description: ID of the task
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: the image to assing to a specified task
+        content:
+          image:
+              schema: 
+                type: string
+                format: binary
+        required: true
+      responses:
+        '204':
+          description: Successful operation - No Content
+          content: {}
+        '400':
+          description: Bad Request
+          content: {}
+        '401':
+          description: Unauthorized
+          content: {}
+        '403':
+          description: Forbidden
+          content: {}
+        '404':
+          description: Not Found
+          content: {}
+        '500':
+          description: Internal Server Error
+          content: {}              
+  '/api/tasks/{taskId}/images/{imageId}':
+    get:
+      tags:
+        - 'tasks/{taskId}/images/{imageId}'
+      security:
+        - cookieAuth: []
+      summary: Retreve an image
+      description: The image with ID imageId is retrieved. This operation can be performed on the task if at least one of the following three conditions is satisfied. 1) The task is public. 2) The user who performs the operation is the task's owner. 3) The user who performs the operation is a task's assignee. 
+      operationId: getSingleImage
+      parameters:
+        - name: taskId
+          in: path
+          description: ID of the task
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: imageId
+          in: path
+          description: ID of the Image to retrieve
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name : Accept
+          in: header
+          description: image/extensions for the image to retrieve
+          required: true
+          schema:
+            type: string
+            format: uuid  
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            image:
+              schema: 
+                type: string
+                format: binary
+        '401':
+          description: Unauthorized
+          content: {}
+        '403':
+          description: Forbidden
+          content: {}
+        '404':
+          description: Not Found
+          content: {}
+        '500':
+          description: Internal Server Error
+          content: {}
+    delete:
+      tags:
+        - 'tasks/{taskId}/images/{imageId}'
+      security:
+        - cookieAuth: []
+      summary: Delete an images
+      description: The image with ID imageId is deleted. This operation can only be performed by the owner.
+      operationId: deleteImage
+      parameters:
+        - name: taskId
+          in: path
+          description: ID of the task
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: imageId
+          in: path
+          description: ID of the image to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Successful operation - No Content
+          content: {}
+        '401':
+          description: Unauthorized
+          content: {}
+        '403':
+          description: Forbidden
+          content: {}
+        '404':
+          description: Not Found
+          content: {}
+        '500':
+          description: Internal Server Error
+          content: {}      
+
   '/api/tasks/{taskId}/assignees/{userId}':
     delete:
       tags:

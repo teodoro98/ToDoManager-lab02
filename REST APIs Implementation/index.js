@@ -12,6 +12,8 @@ var serverPort = 3000;
 var taskController = require(path.join(__dirname, 'controllers/Tasks'));
 var userController = require(path.join(__dirname, 'controllers/Users'));
 var assignmentController = require(path.join(__dirname, 'controllers/Assignments'));
+var imagesController = require(path.join(__dirname, 'controllers/Images'));
+
 
 // swaggerRouter configuration
 var options = {
@@ -67,6 +69,10 @@ app.get('/api/users', passport.authenticate('jwt', { session: false }), userCont
 app.get('/api/users/:userId', passport.authenticate('jwt', { session: false }), userController.getSingleUser);
 app.get('/api/users/:userId/tasks/created', passport.authenticate('jwt', { session: false }), taskController.getOwnedTasks);
 app.get('/api/users/:userId/tasks/assigned', passport.authenticate('jwt', { session: false }), taskController.getAssignedTasks);
+app.post('/api/tasks/:taskId/images', passport.authenticate('jwt', { session: false }), imagesController.assignImagetoTask);
+app.get('/api/tasks/:taskId/images/:imageId', passport.authenticate('jwt', { session: false }), imagesController.getSingleImage);
+app.delete('/api/tasks/:taskId/images/:imageId', passport.authenticate('jwt', { session: false }), imagesController.deleteImage);
+
 
 // Error handlers for validation and authentication errors
 
